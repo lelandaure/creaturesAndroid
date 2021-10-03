@@ -62,6 +62,8 @@ object CreatureStore {
     foods = gson.fromJson(json, listType)
     Log.v(TAG, "Found ${foods.size} food items")
   }
+  
+  fun getCreatures() = creatures
 
   fun getCreatureById(id: Int) = creatures.firstOrNull { it.id == id }
 

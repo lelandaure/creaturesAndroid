@@ -8,17 +8,33 @@ import com.raywenderlich.android.creatures.app.inflate
 import com.raywenderlich.android.creatures.model.Creature
 import kotlinx.android.synthetic.main.list_item_creature.view.*
 
-class CreatureAdapter(private val creatures: List<Creature>): RecyclerView.Adapter<CreatureAdapter.ViewHolder>() {
+class CreatureAdapter(private val creatures: List<Creature>) :
+    RecyclerView.Adapter<CreatureAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private lateinit var creature: Creature
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         fun bind(creature: Creature) {
             this.creature = creature
             val context = itemView.context
             itemView.creatureImage.setImageResource(
-                    context.resources.getIdentifier(creature.uri, null, context.packageName))
+                context.resources.getIdentifier(creature.uri, null, context.packageName)
+            )
             itemView.fullName.text = creature.fullName
+            itemView.nickName.text = creature.nickname
+        }
+
+        override fun onClick(v: View?) {
+            v?.let{
+                val context = it.context
+                val intent = CreatureActivity.newIntent(context, creature.id)
+                context.startActivity(intent)
+//                it.context.startActivity(CreatureActivity.newIntent(it.context, creature.id))
+            }
         }
 
     }
