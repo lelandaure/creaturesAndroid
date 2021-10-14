@@ -36,6 +36,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.raywenderlich.android.creatures.R
 import com.raywenderlich.android.creatures.model.CreatureStore
 import kotlinx.android.synthetic.main.fragment_all.*
@@ -43,7 +45,7 @@ import kotlinx.android.synthetic.main.fragment_all.*
 
 class AllFragment : Fragment() {
 
-    private val adapter = CreatureAdapter(CreatureStore.getCreatures().toMutableList())
+    private val adapter = CreatureWithFoodAdapter(CreatureStore.getCreatures().toMutableList())
 
     companion object {
         fun newInstance(): AllFragment {
@@ -64,5 +66,6 @@ class AllFragment : Fragment() {
         creatureRecyclerView.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         creatureRecyclerView.adapter = adapter
+//        LinearSnapHelper().attachToRecyclerView(creatureRecyclerView)
     }
 }
