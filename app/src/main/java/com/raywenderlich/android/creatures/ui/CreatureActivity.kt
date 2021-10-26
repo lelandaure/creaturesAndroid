@@ -37,13 +37,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.raywenderlich.android.creatures.R
+import com.raywenderlich.android.creatures.databinding.ActivityCreatureBinding
 import com.raywenderlich.android.creatures.model.Creature
 import com.raywenderlich.android.creatures.model.CreatureStore
 import com.raywenderlich.android.creatures.model.Favorites
-import kotlinx.android.synthetic.main.activity_creature.*
 
 class CreatureActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityCreatureBinding
     private lateinit var creature: Creature
     private var adapter = FoodAdapter(mutableListOf())
 
@@ -59,7 +60,8 @@ class CreatureActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_creature)
+        binding = ActivityCreatureBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupCreature()
         setupTitle()
@@ -84,9 +86,15 @@ class CreatureActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        headerImage.setImageResource(resources.getIdentifier(creature.uri, null, packageName))
-        fullName.text = creature.fullName
-        planet.text = creature.planet
+        binding.headerImage.setImageResource(
+            resources.getIdentifier(
+                creature.uri,
+                null,
+                packageName
+            )
+        )
+        binding.fullName.text = creature.fullName
+        binding.planet.text = creature.planet
     }
 
     private fun setupFavoriteButton() {
@@ -96,28 +104,28 @@ class CreatureActivity : AppCompatActivity() {
 
     private fun setupFavoriteButtonImage(creature: Creature) {
         if (creature.isFavorite) {
-            favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
+            binding.favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
         } else {
-            favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
+            binding.favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
         }
     }
 
     private fun setupFavoriteButtonClickListener(creature: Creature) {
-        favoriteButton.setOnClickListener { _ ->
+        binding.favoriteButton.setOnClickListener { _ ->
             if (creature.isFavorite) {
-                favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
+                binding.favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
                 Favorites.removeFavorite(creature, this)
             } else {
-                favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
+                binding.favoriteButton.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
                 Favorites.addFavorite(creature, this)
             }
         }
     }
 
     private fun setupFoods() {
-        this.foodRecyclerView.layoutManager =
+        this.binding.foodRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        foodRecyclerView.adapter = adapter
+        binding.foodRecyclerView.adapter = adapter
         val foods = CreatureStore.getCreatureFoods(this.creature)
         adapter.updateFoods(foods)
     }

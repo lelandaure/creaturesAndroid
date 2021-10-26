@@ -36,14 +36,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.SnapHelper
-import com.raywenderlich.android.creatures.R
+import com.raywenderlich.android.creatures.databinding.FragmentAllBinding
 import com.raywenderlich.android.creatures.model.CreatureStore
-import kotlinx.android.synthetic.main.fragment_all.*
 
 
 class AllFragment : Fragment() {
+
+    private lateinit var binding: FragmentAllBinding
 
     private val adapter = CreatureWithFoodAdapter(CreatureStore.getCreatures().toMutableList())
 
@@ -58,14 +57,15 @@ class AllFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_all, container, false)
+        binding = FragmentAllBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        creatureRecyclerView.layoutManager =
+        binding.creatureRecyclerView.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        creatureRecyclerView.adapter = adapter
+        binding.creatureRecyclerView.adapter = adapter
 //        LinearSnapHelper().attachToRecyclerView(creatureRecyclerView)
     }
 }

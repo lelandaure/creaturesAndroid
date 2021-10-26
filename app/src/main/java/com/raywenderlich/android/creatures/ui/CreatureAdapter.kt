@@ -1,31 +1,31 @@
 package com.raywenderlich.android.creatures.ui
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.raywenderlich.android.creatures.R
-import com.raywenderlich.android.creatures.app.inflate
+import com.raywenderlich.android.creatures.databinding.ListItemCreatureBinding
 import com.raywenderlich.android.creatures.model.Creature
-import kotlinx.android.synthetic.main.list_item_creature.view.*
 
 class CreatureAdapter(private val creatures: MutableList<Creature>) :
     RecyclerView.Adapter<CreatureAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(val binding: ListItemCreatureBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         private lateinit var creature: Creature
 
         init {
-            itemView.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
         }
 
         fun bind(creature: Creature) {
             this.creature = creature
-            val context = itemView.context
-            itemView.creatureImage.setImageResource(
+            val context = binding.root.context
+            binding.creatureImage.setImageResource(
                 context.resources.getIdentifier(creature.uri, null, context.packageName)
             )
-            itemView.fullName.text = creature.fullName
-            itemView.nickName.text = creature.nickname
+            binding.fullName.text = creature.fullName
+            binding.nickName.text = creature.nickname
         }
 
         override fun onClick(v: View?) {
@@ -36,11 +36,12 @@ class CreatureAdapter(private val creatures: MutableList<Creature>) :
 //                it.context.startActivity(CreatureActivity.newIntent(it.context, creature.id))
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.list_item_creature))
+        val binding = ListItemCreatureBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount() = creatures.size

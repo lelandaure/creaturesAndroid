@@ -1,34 +1,34 @@
 package com.raywenderlich.android.creatures.ui
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.raywenderlich.android.creatures.R
-import com.raywenderlich.android.creatures.app.inflate
+import com.raywenderlich.android.creatures.databinding.ListItemCreatureWithFoodBinding
 import com.raywenderlich.android.creatures.model.Creature
 import com.raywenderlich.android.creatures.model.CreatureStore
-import kotlinx.android.synthetic.main.list_item_creature.view.creatureImage
-import kotlinx.android.synthetic.main.list_item_creature_with_food.view.*
 
 class CreatureWithFoodAdapter(private val creatures: MutableList<Creature>) :
     RecyclerView.Adapter<CreatureWithFoodAdapter.ViewHolder>() {
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ViewHolder(private val binding: ListItemCreatureWithFoodBinding) :
+        RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
         private lateinit var creature: Creature
         private val foodAdapter = FoodAdapter(mutableListOf())
 
         init {
-            itemView.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
         }
 
         fun bind(creature: Creature) {
             this.creature = creature
-            val context = itemView.context
-            itemView.creatureImage.setImageResource(
+            val context = binding.root.context
+            binding.creatureImage.setImageResource(
                 context.resources.getIdentifier(creature.uri, null, context.packageName)
             )
             setupFoods()
@@ -41,9 +41,9 @@ class CreatureWithFoodAdapter(private val creatures: MutableList<Creature>) :
         }
 
         private fun setupFoods() {
-            itemView.foodRecyclerView.layoutManager =
-                LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-            itemView.foodRecyclerView.adapter = foodAdapter
+            binding.foodRecyclerView.layoutManager =
+                LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
+            binding.foodRecyclerView.adapter = foodAdapter
 
             val foods = CreatureStore.getCreatureFoods(creature)
             foodAdapter.updateFoods(foods)
@@ -52,10 +52,16 @@ class CreatureWithFoodAdapter(private val creatures: MutableList<Creature>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_creature_with_food))
-        viewHolder.itemView.foodRecyclerView.setRecycledViewPool(viewPool)
-        LinearSnapHelper().attachToRecyclerView(viewHolder.itemView.foodRecyclerView)
-        return viewHolder
+        val binding =
+            ListItemCreatureWithFoodBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        binding.foodRecyclerView.setRecycledViewPool(viewPool)
+        LinearSnapHelper().attachToRecyclerView(binding.foodRecyclerView)
+
+        return ViewHolder(binding)
     }
 
     override fun getItemCount() = creatures.size

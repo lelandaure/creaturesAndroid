@@ -1,18 +1,22 @@
 package com.raywenderlich.android.creatures.ui
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.raywenderlich.android.creatures.R
-import com.raywenderlich.android.creatures.app.inflate
+import com.raywenderlich.android.creatures.databinding.ListItemFoodBinding
 import com.raywenderlich.android.creatures.model.Food
-import kotlinx.android.synthetic.main.list_item_food.view.*
 
 class FoodAdapter(private val foods: MutableList<Food>) :
     RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(parent.inflate(R.layout.list_item_food))
+        ViewHolder(
+            ListItemFoodBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int =
         foods.size
@@ -26,13 +30,14 @@ class FoodAdapter(private val foods: MutableList<Food>) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(private val binding: ListItemFoodBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private lateinit var food: Food
 
         fun bind(food: Food) {
             this.food = food
-            val context = itemView.context
-            itemView.foodImage.setImageResource(
+            val context = binding.root.context
+            binding.foodImage.setImageResource(
                 context.resources.getIdentifier(
                     food.thumbnailUtils,
                     null,
