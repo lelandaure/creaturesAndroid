@@ -35,7 +35,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.raywenderlich.android.creatures.databinding.FragmentAllBinding
 import com.raywenderlich.android.creatures.model.CreatureStore
 
@@ -44,7 +44,7 @@ class AllFragment : Fragment() {
 
     private lateinit var binding: FragmentAllBinding
 
-    private val adapter = CreatureWithFoodAdapter(CreatureStore.getCreatures().toMutableList())
+    private val adapter = CreatureCardAdapter(CreatureStore.getCreatures().toMutableList())
 
     companion object {
         fun newInstance(): AllFragment {
@@ -63,8 +63,16 @@ class AllFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val layoutManager = GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+
+            override fun getSpanSize(position: Int): Int {
+                return if ((position +1) % 7 == 0) layoutManager.spanCount  else 1
+            }
+        }
         binding.creatureRecyclerView.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+//            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            layoutManager
         binding.creatureRecyclerView.adapter = adapter
 //        LinearSnapHelper().attachToRecyclerView(creatureRecyclerView)
     }

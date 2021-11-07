@@ -18,8 +18,7 @@ class FoodAdapter(private val foods: MutableList<Food>) :
             )
         )
 
-    override fun getItemCount(): Int =
-        foods.size
+    override fun getItemCount(): Int = foods.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(foods[position])
@@ -30,7 +29,7 @@ class FoodAdapter(private val foods: MutableList<Food>) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(private val binding: ListItemFoodBinding) :
+    inner class ViewHolder(private val binding: ListItemFoodBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var food: Food
 

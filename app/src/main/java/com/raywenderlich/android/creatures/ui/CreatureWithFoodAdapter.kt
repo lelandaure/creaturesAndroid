@@ -15,7 +15,7 @@ class CreatureWithFoodAdapter(private val creatures: MutableList<Creature>) :
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    class ViewHolder(private val binding: ListItemCreatureWithFoodBinding) :
+    inner class ViewHolder(private val binding: ListItemCreatureWithFoodBinding) :
         RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private lateinit var creature: Creature
