@@ -31,11 +31,11 @@
 package com.raywenderlich.android.creatures.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.raywenderlich.android.creatures.R
 import com.raywenderlich.android.creatures.databinding.FragmentAllBinding
 import com.raywenderlich.android.creatures.model.CreatureStore
 
@@ -46,16 +46,28 @@ class AllFragment : Fragment() {
 
     private val adapter = CreatureCardAdapter(CreatureStore.getCreatures().toMutableList())
 
+    private lateinit var layoutManager: StaggeredGridLayoutManager
+
     companion object {
         fun newInstance(): AllFragment {
             return AllFragment()
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_all, menu)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAllBinding.inflate(inflater, container, false)
         return binding.root
@@ -63,17 +75,34 @@ class AllFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val layoutManager = GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-
-            override fun getSpanSize(position: Int): Int {
-                return if ((position +1) % 7 == 0) layoutManager.spanCount  else 1
-            }
-        }
+        layoutManager = StaggeredGridLayoutManager(2, GridLayoutManager.VERTICAL)
         binding.creatureRecyclerView.layoutManager =
 //            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             layoutManager
         binding.creatureRecyclerView.adapter = adapter
 //        LinearSnapHelper().attachToRecyclerView(creatureRecyclerView)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        when (id) {
+            R.id.action_span_1 -> {
+                showListView()
+                return true
+            }
+            R.id.action_span_2 -> {
+                showGridView()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showListView() {
+        layoutManager.spanCount = 1
+    }
+
+    private fun showGridView() {
+        layoutManager.spanCount = 2
     }
 }

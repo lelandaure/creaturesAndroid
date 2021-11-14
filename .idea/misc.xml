@@ -4,12 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.41875" />
+        <entry key="app/src/main/res/layout/activity_creature.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/fragment_all.xml" value="0.35507246376811596" />
         <entry key="app/src/main/res/layout/list_item_creature.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/list_item_creature_card.xml" value="0.40307971014492755" />
         <entry key="app/src/main/res/layout/list_item_creature_with_food.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/list_item_food.xml" value="0.40307971014492755" />
+        <entry key="app/src/main/res/menu/menu_all.xml" value="0.4036458333333333" />
       </map>
     </option>
   </component>

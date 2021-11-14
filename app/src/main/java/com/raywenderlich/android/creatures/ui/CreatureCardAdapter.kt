@@ -42,7 +42,7 @@ class CreatureCardAdapter(private val creatures: MutableList<Creature>) :
             val imageResource =
                 context.resources.getIdentifier(creature.uri, null, context.packageName)
             binding.creatureImage.setImageResource(imageResource)
-            binding.nickName.text = creature.nickname
+            binding.fullName.text = creature.fullName
             context.setBackgroundColors(imageResource)
 
         }
@@ -63,9 +63,9 @@ class CreatureCardAdapter(private val creatures: MutableList<Creature>) :
                     val backgroundColor =
                         it.getDominantColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     binding.creatureCardView.setBackgroundColor(backgroundColor)
-                    binding.nicknameHolder.setBackgroundColor(backgroundColor)
+                    binding.nameHolder.setBackgroundColor(backgroundColor)
                     val textColor = if (isColorDark(backgroundColor)) Color.WHITE else Color.BLACK
-                    binding.nickName.setTextColor(textColor)
+                    binding.fullName.setTextColor(textColor)
                 }
             }
         }
