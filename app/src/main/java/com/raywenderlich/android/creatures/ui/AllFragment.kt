@@ -34,6 +34,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.raywenderlich.android.creatures.R
 import com.raywenderlich.android.creatures.databinding.FragmentAllBinding
@@ -45,8 +46,18 @@ class AllFragment : Fragment() {
     private lateinit var binding: FragmentAllBinding
 
     private val adapter = CreatureCardAdapter(CreatureStore.getCreatures().toMutableList())
-
     private lateinit var layoutManager: StaggeredGridLayoutManager
+
+    private lateinit var listItemDecoration: RecyclerView.ItemDecoration
+    private lateinit var gridItemDecoration: RecyclerView.ItemDecoration
+    private lateinit var listMenuItem: MenuItem
+    private lateinit var gridMenuItem: MenuItem
+    private var gridState = GridState.GRID
+
+    private enum class GridState {
+        LIST, GRID
+    }
+
 
     companion object {
         fun newInstance(): AllFragment {
@@ -77,32 +88,57 @@ class AllFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = StaggeredGridLayoutManager(2, GridLayoutManager.VERTICAL)
         binding.creatureRecyclerView.layoutManager =
-//            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             layoutManager
         binding.creatureRecyclerView.adapter = adapter
-//        LinearSnapHelper().attachToRecyclerView(creatureRecyclerView)
+//        LinearSnapHelper().attachToRecyclerView(binding.creatureRecyclerView)
+        val spacingInPixel =
+            resources.getDimensionPixelSize(R.dimen.creature_card_grid_layout_margin)
+        listItemDecoration = SpacingItemDecoration(1, spacingInPixel)
+        gridItemDecoration = SpacingItemDecoration(2, spacingInPixel)
+        binding.creatureRecyclerView.addItemDecoration(gridItemDecoration)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        listMenuItem = menu.findItem(R.id.action_span_1)
+        gridMenuItem = menu.findItem(R.id.action_span_2)
+
+        when (gridState) {
+            GridState.LIST -> {
+                listMenuItem.isEnabled = false
+                gridMenuItem.isEnabled = true
+            }
+            GridState.GRID -> {
+                listMenuItem.isEnabled = true
+                gridMenuItem.isEnabled = false
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {
             R.id.action_span_1 -> {
-                showListView()
+                gridState = GridState.LIST
+                updateRecyclerView(1, listItemDecoration, gridItemDecoration)
                 return true
             }
             R.id.action_span_2 -> {
-                showGridView()
+                gridState = GridState.GRID
+                updateRecyclerView(2, gridItemDecoration, listItemDecoration)
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showListView() {
-        layoutManager.spanCount = 1
-    }
-
-    private fun showGridView() {
-        layoutManager.spanCount = 2
+    private fun updateRecyclerView(
+        spanCount: Int,
+        addItemDecoration: RecyclerView.ItemDecoration,
+        removeItemDecoration: RecyclerView.ItemDecoration,
+    ) {
+        layoutManager.spanCount = spanCount
+        binding.creatureRecyclerView.removeItemDecoration(removeItemDecoration)
+        binding.creatureRecyclerView.addItemDecoration(addItemDecoration)
     }
 }
