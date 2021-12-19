@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +29,7 @@ class CreatureCardAdapter(private val creatures: MutableList<Creature>) :
         holder.bind(creatures[position])
     }
 
-    inner class ViewHolder(val binding: ListItemCreatureCardBinding) :
+    inner class ViewHolder(private val binding: ListItemCreatureCardBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         private lateinit var creature: Creature
 
@@ -44,6 +45,7 @@ class CreatureCardAdapter(private val creatures: MutableList<Creature>) :
             binding.creatureImage.setImageResource(imageResource)
             binding.fullName.text = creature.fullName
             context.setBackgroundColors(imageResource)
+            itemView.animateView()
 
         }
 
@@ -64,19 +66,26 @@ class CreatureCardAdapter(private val creatures: MutableList<Creature>) :
                         it.getDominantColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     binding.creatureCardView.setBackgroundColor(backgroundColor)
                     binding.nameHolder.setBackgroundColor(backgroundColor)
-                    val textColor = if (isColorDark(backgroundColor)) Color.WHITE else Color.BLACK
+                    val textColor = if (backgroundColor.isColorDark()) Color.WHITE else Color.BLACK
                     binding.fullName.setTextColor(textColor)
                 }
             }
         }
 
-        private fun isColorDark(color: Int): Boolean {
+        private fun Int.isColorDark(): Boolean {
             val darkness =
-                1 - (0.299 * Color.red(color) +
-                        0.587 * Color.green(color) +
-                        0.114 * Color.blue(color)) / 255
+                1 - (0.299 * Color.red(this) +
+                        0.587 * Color.green(this) +
+                        0.114 * Color.blue(this)) / 255
             return darkness > 0.5
         }
+
+        private fun View.animateView() {
+            if (this.animation.equals(null)) {
+                this.animation =  AnimationUtils.loadAnimation(this.context, R.anim.slide_from_bottom)
+            }
+        }
+
     }
 
 }

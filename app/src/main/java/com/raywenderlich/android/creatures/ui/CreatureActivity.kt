@@ -36,6 +36,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.GridLayoutManager
 import com.raywenderlich.android.creatures.R
 import com.raywenderlich.android.creatures.databinding.ActivityCreatureBinding
@@ -131,13 +132,13 @@ class CreatureActivity : AppCompatActivity() {
         val foods = CreatureStore.getCreatureFoods(this.creature)
         adapter.updateFoods(foods)
 
-        /*val heightInPixels = resources.getDimensionPixelSize(R.dimen.list_item_divider_height)
+        val heightInPixels = resources.getDimensionPixelSize(R.dimen.list_item_divider_height)
 
         binding.foodRecyclerView.addItemDecoration(
-            DividerItemDecoration(
+            FoodItemDecoration(
                 ContextCompat.getColor(this, R.color.black),
                 heightInPixels
             )
-        )*/
+        )
     }
 }
